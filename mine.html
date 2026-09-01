@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDTPayU - My Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f7f8fc;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background-color: #f9fafc;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: #fff;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn {
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #d32f2f;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 90px;
+        }
+
+        /* User Info Card */
+        .user-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .user-avatar {
+            width: 65px;
+            height: 65px;
+            background: #ffebee;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #d32f2f;
+            font-size: 28px;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.15);
+            margin-right: 15px;
+        }
+
+        .user-details h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 4px;
+        }
+
+        .vip-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .vip-tag {
+            background: #fff8e1;
+            color: #f57f17;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #ffe082;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Grid Menu (Top 6 Options) */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .grid-item {
+            background: #fff;
+            padding: 18px 10px;
+            border-radius: 16px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #f1f3f5;
+        }
+
+        .grid-item:active {
+            transform: scale(0.96);
+        }
+
+        .grid-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            margin: 0 auto 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        /* Unique Icon Background Colors */
+        .recharge-bg { background: #ffebee; color: #d32f2f; }
+        .withdraw-bg { background: #e8f5e9; color: #2e7d32; }
+        .history-bg  { background: #fce4ec; color: #c2185b; }
+        .transfer-bg { background: #fff3e0; color: #ef6c00; }
+        .team-bg     { background: #ffebee; color: #d32f2f; }
+        .vip-bg      { background: #fffde7; color: #fbc02d; }
+
+        .grid-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Settings & Support Section */
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .setting-item {
+            background: #fff;
+            padding: 14px 16px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            border: 1px solid #f1f3f5;
+            transition: background 0.2s;
+        }
+
+        .setting-item:active {
+            background: #f8f9fa;
+        }
+
+        .setting-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .setting-icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .setting-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .setting-arrow {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 15px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #8e8e93;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <!-- Top Header -->
+        <div class="profile-header">
+            <div class="header-left">
+                <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+                <div class="header-title">My Profile</div>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+
+        <div class="content-area">
+            
+            <!-- User Profile Card -->
+            <div class="user-card">
+                <div class="user-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <h2 id="userName">Loading...</h2>
+                    <div class="vip-badge-row">
+                        <span class="vip-tag" id="userVipTag"><i class="fa-solid fa-crown"></i> VIP0</span>
+                        <span class="user-email" id="userEmail">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Grid Buttons -->
+            <div class="grid-menu">
+                <a href="deposit.html" class="grid-item">
+                    <div class="grid-icon recharge-bg"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="grid-label">Recharge</div>
+                </a>
+                <a href="withdraw.html" class="grid-item">
+                    <div class="grid-icon withdraw-bg"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                    <div class="grid-label">Withdraw</div>
+                </a>
+                <a href="history.html" class="grid-item">
+                    <div class="grid-icon history-bg"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                    <div class="grid-label">History</div>
+                </a>
+                <a href="transfer.html" class="grid-item">
+                    <div class="grid-icon transfer-bg"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                    <div class="grid-label">Transfer</div>
+                </a>
+                <a href="team.html" class="grid-item">
+                    <div class="grid-icon team-bg"><i class="fa-solid fa-users"></i></div>
+                    <div class="grid-label">Team</div>
+                </a>
+                <a href="vip.html" class="grid-item">
+                    <div class="grid-icon vip-bg"><i class="fa-solid fa-crown"></i></div>
+                    <div class="grid-label">VIP</div>
+                </a>
+            </div>
+
+            <!-- Settings & Support Section -->
+            <div class="section-title">Settings & Support</div>
+            <div class="settings-list">
+                <a href="password.html" class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-icon-box" style="background: #ffebee; color: #d32f2f;"><i class="fa-solid fa-lock"></i></div>
+                        <div class="setting-text">Login Password</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right setting-arrow"></i>
+                </a>
+                <a href="faqs.html" class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-icon-box" style="background: #ffebee; color: #d32f2f;"><i class="fa-solid fa-circle-question"></i></div>
+                        <div class="setting-text">FAQs</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right setting-arrow"></i>
+                </a>
+                <a href="help.html" class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-icon-box" style="background: #fff3e0; color: #ef6c00;"><i class="fa-solid fa-headset"></i></div>
+                        <div class="setting-text">Customer Support</div>
+                    </div>
+                    <i class="fa-solid fa-arrow-up-right-from-square setting-arrow" style="font-size: 11px;"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="mining.html" class="nav-item"><i class="fa-solid fa-asterisk"></i><span>Mining</span></a>
+            <a href="team.html" class="nav-item"><i class="fa-solid fa-users-viewfinder"></i><span>Team</span></a>
+            <a href="mine.html" class="nav-item active"><i class="fa-solid fa-robot"></i><span>Mine</span></a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxhx6PSbcK6lClXQnsN-mcmQXEwRZgKJ4",
+            authDomain: "earning-site-88f92.firebaseapp.com",
+            projectId: "earning-site-88f92",
+            storageBucket: "earning-site-88f92.firebasestorage.app",
+            messagingSenderId: "17257443529",
+            appId: "1:17257443529:web:496d88aafdc853a88a1d18"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userRef = ref(db, 'users/' + user.uid);
+                try {
+                    const snapshot = await get(userRef);
+                    if (snapshot.exists()) {
+                        let userData = snapshot.val();
+                        document.getElementById('userName').innerText = userData.name || "User";
+                        document.getElementById('userEmail').innerText = user.email || userData.email || "";
+                        
+                        let vipLevel = userData.vipLevel || 0;
+                        document.getElementById('userVipTag').innerHTML = `<i class="fa-solid fa-crown"></i> VIP${vipLevel}`;
+                    } else {
+                        document.getElementById('userName').innerText = "User";
+                        document.getElementById('userEmail').innerText = user.email;
+                    }
+                } catch (error) {
+                    console.error("प्रयोगकर्ता डाटा लोड गर्न समस्या आयो:", error);
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        window.handleLogout = function() {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("लगआउट गर्न असफल भयो:", error);
+            });
+        };
+    </script>
+</body>
+</html>

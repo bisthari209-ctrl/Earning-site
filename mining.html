@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDTPayU - Cloud Mining</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f7f8fc;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background-color: #f9fafc;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 20px;
+            background: #fff;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .header-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #222;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 15px;
+            padding-bottom: 90px;
+            text-align: center;
+        }
+
+        /* Top VIP & Income Cards */
+        .top-info-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .info-card {
+            flex: 1;
+            background: #fff;
+            padding: 15px 10px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #f1f3f5;
+            text-align: center;
+        }
+
+        .card-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .card-value-vip {
+            font-size: 20px;
+            font-weight: 900;
+            color: #d32f2f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .card-value-income {
+            font-size: 18px;
+            font-weight: 900;
+            color: #16a34a;
+        }
+
+        /* Fan / Hashrate Section */
+        .mining-graphic-container {
+            margin: 10px 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fan-box {
+            width: 170px;
+            height: 170px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(25, 118, 210, 0.15);
+            margin-bottom: 15px;
+            border: 4px solid #fff;
+        }
+
+        .fan-icon {
+            font-size: 80px;
+            color: #1976d2;
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hashrate-number {
+            font-size: 26px;
+            font-weight: 900;
+            color: #222;
+        }
+
+        .hashrate-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #e53935;
+            margin-top: 2px;
+        }
+
+        /* Add Power Button */
+        .add-power-btn {
+            background: linear-gradient(135deg, #e53935, #c62828);
+            color: white;
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(229, 57, 53, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            margin-bottom: 30px;
+        }
+
+        .add-power-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Mining Records Section */
+        .records-section {
+            text-align: left;
+        }
+
+        .records-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #222;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-left: 3px solid #e53935;
+            padding-left: 8px;
+        }
+
+        .records-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #f1f3f5;
+        }
+
+        .records-header-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            color: #888;
+            border-bottom: 1px solid #f0f2f5;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        .no-records {
+            font-size: 12px;
+            color: #777;
+            font-weight: 600;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 15px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #8e8e93;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="profile-header">
+            <div class="header-title">Cloud Mining</div>
+        </div>
+
+        <div class="content-area">
+            
+            <div class="top-info-row">
+                <div class="info-card">
+                    <div class="card-label">My VIP Level</div>
+                    <div class="card-value-vip"><i class="fa-solid fa-crown"></i> <span id="vipLevelDisplay">0</span></div>
+                </div>
+                <div class="info-card">
+                    <div class="card-label">Est. Daily Income</div>
+                    <div class="card-value-income" id="dailyIncomeDisplay">रु 0.00</div>
+                </div>
+            </div>
+
+            <div class="mining-graphic-container">
+                <div class="fan-box">
+                    <i class="fa-solid fa-fan fan-icon"></i>
+                </div>
+                <div class="hashrate-number"><span id="hashrateDisplay">0.00</span> <span style="font-size: 14px; color: #666;">GH/s</span></div>
+                <div class="hashrate-label">Current Hashrate</div>
+            </div>
+
+            <a href="vip.html" class="add-power-btn">
+                <i class="fa-solid fa-circle-plus"></i> Add More Power
+            </a>
+
+            <div class="records-section">
+                <div class="records-title">Mining Records</div>
+                <div class="records-card">
+                    <div class="records-header-row">
+                        <span>DATE</span>
+                        <span>MINED AMOUNT</span>
+                    </div>
+                    <div id="recordsContainer" class="no-records">No mining records yet.</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom-nav">
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="mining.html" class="nav-item active"><i class="fa-solid fa-asterisk"></i><span>Mining</span></a>
+            <a href="team.html" class="nav-item"><i class="fa-solid fa-users-viewfinder"></i><span>Team</span></a>
+            <a href="mine.html" class="nav-item"><i class="fa-solid fa-robot"></i><span>Mine</span></a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxhx6PSbcK6lClXQnsN-mcmQXEwRZgKJ4",
+            authDomain: "earning-site-88f92.firebaseapp.com",
+            projectId: "earning-site-88f92",
+            storageBucket: "earning-site-88f92.firebasestorage.app",
+            messagingSenderId: "17257443529",
+            appId: "1:17257443529:web:496d88aafdc853a88a1d18"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // प्रयोगकर्ता लगइन छ भने डाटाबेसबाट प्लान लोड गर्ने
+                const userPlanRef = ref(db, 'users/' + user.uid + '/activePlan');
+                try {
+                    const snapshot = await get(userPlanRef);
+                    if (snapshot.exists()) {
+                        let plan = snapshot.val();
+                        
+                        document.getElementById('vipLevelDisplay').innerText = plan.level || "0";
+                        document.getElementById('dailyIncomeDisplay').innerText = "रु " + (plan.dailyReturn ? plan.dailyReturn.toFixed(2) : "0.00");
+                        document.getElementById('hashrateDisplay').innerText = (plan.amount ? (plan.amount * 0.5).toFixed(2) : "0.00");
+                        
+                        document.getElementById('recordsContainer').innerHTML = `
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #333; font-weight: 600;">
+                                <span>${plan.date || 'Today'}</span>
+                                <span style="color: #16a34a; font-weight: 800;">+रु ${plan.dailyReturn}</span>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error("डाटा लोड गर्न समस्या आयो:", error);
+                }
+            } else {
+                // लगइन छैन भने लगइन पेजमा पठाउने
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+</body>
+</html>

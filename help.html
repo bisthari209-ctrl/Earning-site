@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Pay - Help & Support</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f7f8fc;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background-color: #f9fafc;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 20px;
+            background: #fff;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .header-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #222;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 15px;
+            padding-bottom: 90px;
+        }
+
+        .help-banner {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
+        }
+
+        .help-banner h3 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .help-banner p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #222;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-left: 3px solid #16a34a;
+            padding-left: 8px;
+        }
+
+        /* Social Buttons Grid */
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .social-btn {
+            background: #fff;
+            padding: 15px;
+            border-radius: 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #f1f3f5;
+            transition: 0.2s ease;
+        }
+
+        .social-btn:active {
+            transform: scale(0.97);
+        }
+
+        .social-btn i {
+            font-size: 24px;
+        }
+
+        .social-info .platform-name {
+            font-size: 13px;
+            font-weight: 800;
+            color: #222;
+        }
+
+        .social-info .platform-desc {
+            font-size: 10px;
+            color: #777;
+            font-weight: 600;
+        }
+
+        /* Specific Brand Colors */
+        .telegram i { color: #0088cc; }
+        .viber i { color: #7360f2; }
+        .facebook i { color: #1877F2; }
+
+        /* FAQ / Help Links List */
+        .faq-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 5px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #f1f3f5;
+        }
+
+        .faq-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f2f5;
+            cursor: pointer;
+            color: #333;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-item span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .faq-item i {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: #fff;
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #111;
+        }
+
+        .modal-close {
+            background: #f1f3f5;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-body ul {
+            padding-left: 18px;
+            margin-top: 8px;
+        }
+
+        .modal-body li {
+            margin-bottom: 6px;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 15px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #8e8e93;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="profile-header">
+            <div class="header-title">Help & Support</div>
+        </div>
+
+        <div class="content-area">
+            
+            <div class="help-banner">
+                <h3>सहयोग चाहिएको छ?</h3>
+                <p>हाम्रो सपोर्ट टिमसँग सिधै कुरा गर्न तलको कुनै पनि माध्यम प्रयोग गर्नुहोस्।</p>
+            </div>
+
+            <div class="section-title">Social Support Channels</div>
+
+            <div class="social-grid">
+                <!-- पहिलो Telegram (helpingchat12) -->
+                <a href="https://t.me/helpingchat12" target="_blank" class="social-btn telegram">
+                    <i class="fa-brands fa-telegram"></i>
+                    <div class="social-info">
+                        <div class="platform-name">Telegram 1</div>
+                        <div class="platform-desc">Support Chat</div>
+                    </div>
+                </a>
+
+                <!-- दोस्रो Telegram (investsite23) -->
+                <a href="https://t.me/investsite23" target="_blank" class="social-btn telegram">
+                    <i class="fa-brands fa-telegram"></i>
+                    <div class="social-info">
+                        <div class="platform-name">Telegram 2</div>
+                        <div class="platform-desc">Community Channel</div>
+                    </div>
+                </a>
+
+                <a href="viber://chat?number=9779800000000" class="social-btn viber">
+                    <i class="fa-brands fa-viber"></i>
+                    <div class="social-info">
+                        <div class="platform-name">Viber</div>
+                        <div class="platform-desc">Direct Message</div>
+                    </div>
+                </a>
+
+                <a href="https://facebook.com/yourpage" target="_blank" class="social-btn facebook">
+                    <i class="fa-brands fa-facebook"></i>
+                    <div class="social-info">
+                        <div class="platform-name">Facebook</div>
+                        <div class="platform-desc">Official Page</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="section-title">Frequently Asked Questions</div>
+
+            <div class="faq-card">
+                <button class="faq-item" onclick="openModal('planModal')">
+                    <span>प्लान कसरी खरिद गर्ने?</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="faq-item" onclick="openModal('rechargeModal')">
+                    <span>ब्यालेन्स कसरी जम्मा (Recharge) गर्ने?</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="faq-item" onclick="openModal('withdrawModal')">
+                    <span>पैसा निकासी (Withdraw) गर्ने नियमहरू</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="bottom-nav">
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="mining.html" class="nav-item"><i class="fa-solid fa-asterisk"></i><span>Mining</span></a>
+            <a href="team.html" class="nav-item"><i class="fa-solid fa-users-viewfinder"></i><span>Team</span></a>
+            <a href="mine.html" class="nav-item active"><i class="fa-solid fa-robot"></i><span>Mine</span></a>
+        </div>
+    </div>
+
+    <!-- Modals for FAQs / Rules -->
+    <div class="modal-overlay" id="planModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">प्लान कसरी खरिद गर्ने?</div>
+                <button class="modal-close" onclick="closeModal('planModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                १. एपको तल रहेको <b>Mining</b> पेजमा जानुहोस् र रातो रङ्गको <b>"Add More Power"</b> बटनमा क्लिक गर्नुहोस्。<br><br>
+                २. त्यसपछि तपाईं <b>VIP Plans</b> पेजमा पुग्नुहुन्छ, जहाँ विभिन्न लेभलका प्लानहरू देख्न सक्नुहुन्छ。<br><br>
+                ३. आफूलाई मनपर्ने प्लानको तल रहेको <b>"Invest Now"</b> बटनमा क्लिक गर्नुहोस्। यसरी तपाईंको प्लान खरिद हुनेछ।
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="rechargeModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">ब्यालेन्स कसरी जम्मा गर्ने?</div>
+                <button class="modal-close" onclick="closeModal('rechargeModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                १. प्रोफाइल वा Home पेजमा रहेको <b>Recharge</b> बटनमा क्लिक गर्नुहोस्。<br><br>
+                २. तपाईंले जम्मा गर्न चाहेको रकम (Amount) टाइप गर्नुहोस्。<br><br>
+                ३. दिइएको भुक्तानी माध्यममार्फत रकम पठाएर ट्रान्जेक्सन आईडी (Transaction ID) राख्नुहोस्, प्रमाणित भएपछि ब्यालेन्स जम्मा हुनेछ।
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">पैसा निकासी (Withdraw) नियमहरू</div>
+                <button class="modal-close" onclick="closeModal('withdrawModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li><b>न्यूनतम सीमा:</b> प्रयोगकर्ताले पैसा झिकाउन तोकिएको न्यूनतम मौज्दात पुगेको हुनुपर्छ।</li>
+                    <li><b>दैनिक सीमा:</b> २४ घण्टਾमा एकपटक मात्र निकासी अनुरोध गर्न सकिनेछ।</li>
+                    <li><b>सेवा शुल्क:</b> निकासी गर्दा प्लेटफर्मको नियम अनुसार सामान्य सेवा शुल्क काटिन सक्छ।</li>
+                    <li><b>सही विवरण:</b> बैंक खाता वा वालेटको सही विवरण मात्र भर्नुहोला।</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+    </script>
+
+</body>
+</html>

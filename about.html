@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Pay - About Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f7f8fc;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background-color: #f9fafc;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Top Welcome Header Style */
+        .welcome-header {
+            background: linear-gradient(135deg, #16a34a, #15803d); /* नेपाली पहिचान झल्किने हरियो रङ */
+            color: white;
+            padding: 30px 20px 40px 20px;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+            text-align: center;
+        }
+
+        .app-brand {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .app-brand i {
+            color: #facc15;
+        }
+
+        .welcome-text {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+
+        /* Content Area */
+        .main-content {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .info-box-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid #f0f2f5;
+            margin-top: -20px;
+        }
+
+        .info-box-card h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #111;
+            margin-bottom: 10px;
+        }
+
+        .info-box-card p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* ===== ABOUT US POPUP MODAL STYLES (सिधै खुल्ने) ===== */
+        .about-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* तलबाट माथि पपअप आउने */
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s ease;
+        }
+
+        .about-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .about-modal-box {
+            background: #ffffff;
+            width: 100%;
+            max-width: 420px;
+            padding: 25px 22px;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .about-modal-overlay.active .about-modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .about-modal-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #111;
+        }
+
+        .close-modal-btn {
+            background: #f1f3f5;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: #555;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            background: #e4e7eb;
+            color: #000;
+        }
+
+        .about-modal-text {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .about-modal-text strong {
+            color: #15803d;
+            font-weight: 700;
+        }
+
+        .modal-footer-divider {
+            height: 1px;
+            background: #f0f2f5;
+            margin: 20px 0 12px 0;
+        }
+
+        .version-text {
+            font-size: 11px;
+            color: #888;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <!-- Welcom र तपाईंको नेपाली एपको नाम स्पष्ट देखिने Header -->
+        <div class="welcome-header">
+            <div class="app-brand">
+                <i class="fa-solid fa-shield-halved"></i>Details) 
+            </div>
+            <div class="welcome-text">Welcome to Nepal Pay App</div>
+        </div>
+
+        <div class="main-content">
+            <div class="info-box-card">
+                <h3>हाम्रो डिजिटल प्लेटफर्ममा स्वागत छ</h3>
+                <p>सुरक्षित, छिटो र भरपर्दो डिजिटल सेवाहरूको अनुभव लिनुहोस्।</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Us Custom Popup Box (पेज खुल्नेबित्तिकै अटोमेटिक देखिने) -->
+    <div class="about-modal-overlay active" id="aboutModal">
+        <div class="about-modal-box">
+            <div class="modal-header-row">
+                <div class="about-modal-title">हाम्रो बारेमा (About Us)</div>
+                <button class="close-modal-btn" onclick="closeAboutModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="about-modal-text">
+                <strong>Nepal Pay</strong> एउटा अग्रणी डिजिटल तथा अनलाइन प्लेटफर्म हो, जसले प्रयोगकर्ताहरूलाई सजिलो र भरपर्दो सेवा प्रदान गर्न यो एप तयार गरिएको हो।
+            </div>
+            
+            <div class="about-modal-text">
+                हाम्रो मुख्य उद्देश्य प्रविधिको माध्यमबाट नेपालभरका प्रयोगकर्ताहरूलाई अझ सहज र प्रभावकारी डिजिटल सेवा दिनु हो। जोडिनुभएकोमा धन्यवाद!
+            </div>
+
+            <div class="modal-footer-divider"></div>
+            <div class="version-text">Version 1.0.0 © 2026 Nepal Pay Inc.</div>
+        </div>
+    </div>
+
+    <script>
+        // पपअप बन्द गर्नको लागि
+        function closeAboutModal() {
+            document.getElementById('aboutModal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

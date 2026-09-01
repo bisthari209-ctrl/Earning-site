@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDTPayU - My Team</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f7f8fc;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background-color: #f9fafc;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: #fff;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .back-btn {
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: 90px;
+        }
+
+        .invite-card {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.25);
+            margin-bottom: 20px;
+        }
+
+        .invite-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .invite-desc {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .invite-link-box {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .invite-url {
+            font-size: 11px;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 240px;
+        }
+
+        .copy-btn {
+            background: #fff;
+            color: #d32f2f;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 16px 12px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #f1f3f5;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #333;
+        }
+
+        .stat-value.green { color: #2e7d32; }
+        .stat-value.red { color: #d32f2f; }
+
+        .section-header-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-header-title::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: #d32f2f;
+            border-radius: 2px;
+        }
+
+        .rates-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .rate-card {
+            background: #fff;
+            padding: 15px 10px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #f1f3f5;
+        }
+
+        .level-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .lvl-1 { background: #ffebee; color: #d32f2f; }
+        .lvl-2 { background: #fff3e0; color: #ef6c00; }
+        .lvl-3 { background: #fffde7; color: #fbc02d; }
+
+        .rate-percentage {
+            font-size: 18px;
+            font-weight: 800;
+            color: #222;
+        }
+
+        .table-box {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #f1f3f5;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .team-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .team-table th {
+            background: #fafbfc;
+            padding: 12px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #777;
+            text-transform: uppercase;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .team-table td {
+            padding: 14px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #333;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .team-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .text-green { color: #2e7d32; }
+        .text-red { color: #d32f2f; }
+
+        .custom-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .custom-popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-popup-box {
+            background: #fff;
+            width: 85%;
+            max-width: 320px;
+            padding: 25px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .custom-popup-overlay.active .custom-popup-box {
+            transform: scale(1);
+        }
+
+        .custom-popup-icon {
+            font-size: 40px;
+            color: #00c853;
+            margin-bottom: 12px;
+        }
+
+        .custom-popup-msg {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .custom-popup-btn {
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 15px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #8e8e93;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <!-- Top Header -->
+        <div class="profile-header">
+            <a href="mine.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+            <div class="header-title">My Team</div>
+        </div>
+
+        <div class="content-area">
+            
+            <!-- Invite Friends Banner -->
+            <div class="invite-card">
+                <div class="invite-title">Invite Friends</div>
+                <div class="invite-desc">Earn passive income by building your team and sharing your referral link.</div>
+                <div class="invite-link-box">
+                    <span class="invite-url" id="referralLink">Loading...</span>
+                    <button class="copy-btn" onclick="copyReferralLink()">Copy</button>
+                </div>
+            </div>
+
+            <!-- Overall Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Referrals</div>
+                    <div class="stat-value" id="totalMembers">0 जना</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Commission</div>
+                    <div class="stat-value green" id="totalCommission">रु 0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Team Recharge</div>
+                    <div class="stat-value red" id="teamRecharge">रु 0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Team Withdraw</div>
+                    <div class="stat-value red" id="teamWithdraw">रु 0.00</div>
+                </div>
+            </div>
+
+            <!-- Commission Rates Section -->
+            <div class="section-header-title">Commission Rates</div>
+            <div class="rates-grid">
+                <div class="rate-card">
+                    <span class="level-badge lvl-1">LEVEL 1</span>
+                    <div class="rate-percentage">8%</div>
+                </div>
+                <div class="rate-card">
+                    <span class="level-badge lvl-2">LEVEL 2</span>
+                    <div class="rate-percentage">3%</div>
+                </div>
+                <div class="rate-card">
+                    <span class="level-badge lvl-3">LEVEL 3</span>
+                    <div class="rate-percentage">2%</div>
+                </div>
+            </div>
+
+            <!-- Detailed Team Levels Table -->
+            <div class="section-header-title">Team Level Breakdown</div>
+            <div class="table-box">
+                <table class="team-table">
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Members</th>
+                            <th>Recharge (रु)</th>
+                            <th>Commission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Level 1</td>
+                            <td id="lvl1Members">0 जना</td>
+                            <td class="text-red" id="lvl1Recharge">रु 0</td>
+                            <td class="text-green" id="lvl1Commission">रु 0</td>
+                        </tr>
+                        <tr>
+                            <td>Level 2</td>
+                            <td id="lvl2Members">0 जना</td>
+                            <td class="text-red" id="lvl2Recharge">रु 0</td>
+                            <td class="text-green" id="lvl2Commission">रु 0</td>
+                        </tr>
+                        <tr>
+                            <td>Level 3</td>
+                            <td id="lvl3Members">0 जना</td>
+                            <td class="text-red" id="lvl3Recharge">रु 0</td>
+                            <td class="text-green" id="lvl3Commission">रु 0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="mining.html" class="nav-item"><i class="fa-solid fa-asterisk"></i><span>Mining</span></a>
+            <a href="team.html" class="nav-item active"><i class="fa-solid fa-users-viewfinder"></i><span>Team</span></a>
+            <a href="mine.html" class="nav-item"><i class="fa-solid fa-robot"></i><span>Mine</span></a>
+        </div>
+    </div>
+
+    <!-- Custom Alert Popup -->
+    <div class="custom-popup-overlay" id="customPopup">
+        <div class="custom-popup-box">
+            <div class="custom-popup-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="custom-popup-msg">Referral link copied successfully!</div>
+            <button class="custom-popup-btn" onclick="closeCustomPopup()">ठीक छ (OK)</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxhx6PSbcK6lClXQnsN-mcmQXEwRZgKJ4",
+            authDomain: "earning-site-88f92.firebaseapp.com",
+            projectId: "earning-site-88f92",
+            storageBucket: "earning-site-88f92.firebasestorage.app",
+            messagingSenderId: "17257443529",
+            appId: "1:17257443529:web:496d88aafdc853a88a1d18"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // प्रयोगकर्ताको युनिक रिफरल लिङ्क जेनेरेट गर्ने
+                const refLink = `${window.location.origin}/register.html?ref=${user.uid}`;
+                document.getElementById('referralLink').innerText = refLink;
+
+                // डेटाबेसबाट टिमको डाटा लोड गर्ने
+                const teamRef = ref(db, 'users/' + user.uid + '/teamStats');
+                try {
+                    const snapshot = await get(teamRef);
+                    if (snapshot.exists()) {
+                        let stats = snapshot.val();
+                        
+                        document.getElementById('totalMembers').innerText = (stats.totalMembers || 0) + " जना";
+                        document.getElementById('totalCommission').innerText = "रु " + (stats.totalCommission || 0).toFixed(2);
+                        document.getElementById('teamRecharge').innerText = "रु " + (stats.teamRecharge || 0).toFixed(2);
+                        document.getElementById('teamWithdraw').innerText = "रु " + (stats.teamWithdraw || 0).toFixed(2);
+
+                        // Level breakdown data
+                        if(stats.levels) {
+                            document.getElementById('lvl1Members').innerText = (stats.levels.lvl1?.members || 0) + " जना";
+                            document.getElementById('lvl1Recharge').innerText = "रु " + (stats.levels.lvl1?.recharge || 0);
+                            document.getElementById('lvl1Commission').innerText = "रु " + (stats.levels.lvl1?.commission || 0);
+
+                            document.getElementById('lvl2Members').innerText = (stats.levels.lvl2?.members || 0) + " जना";
+                            document.getElementById('lvl2Recharge').innerText = "रु " + (stats.levels.lvl2?.recharge || 0);
+                            document.getElementById('lvl2Commission').innerText = "रु " + (stats.levels.lvl2?.commission || 0);
+
+                            document.getElementById('lvl3Members').innerText = (stats.levels.lvl3?.members || 0) + " जना";
+                            document.getElementById('lvl3Recharge').innerText = "रु " + (stats.levels.lvl3?.recharge || 0);
+                            document.getElementById('lvl3Commission').innerText = "रु " + (stats.levels.lvl3?.commission || 0);
+                        }
+                    }
+                } catch (error) {
+                    console.error("टिम डाटा लोड गर्न समस्या आयो:", error);
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+
+    <script>
+        function copyReferralLink() {
+            const linkText = document.getElementById('referralLink').innerText;
+            navigator.clipboard.writeText(linkText).then(() => {
+                document.getElementById('customPopup').classList.add('active');
+            });
+        }
+
+        function closeCustomPopup() {
+            document.getElementById('customPopup').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

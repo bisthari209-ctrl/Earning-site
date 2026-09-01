@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDTPayU - FAQs & Support</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f7f8fc; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .phone-container { width: 100%; max-width: 420px; height: 100vh; background-color: #f9fafc; position: relative; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; }
+        .content-area { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 80px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0 15px 0; font-size: 18px; font-weight: 700; }
+
+        /* FAQ Accordion Style */
+        .faq-section { margin-bottom: 20px; }
+        .faq-title-main { font-size: 14px; font-weight: 700; color: #444; margin-bottom: 10px; }
+        .faq-item { background: #fff; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); overflow: hidden; cursor: pointer; }
+        .faq-question { padding: 14px; font-size: 13px; font-weight: 600; color: #222; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question i { font-size: 12px; color: #888; transition: 0.3s; }
+        .faq-answer { padding: 0 14px 14px 14px; font-size: 12px; color: #666; line-height: 1.5; display: none; }
+        .faq-item.active .faq-answer { display: block; }
+        .faq-item.active .faq-question i { transform: rotate(180deg); color: #ff3b30; }
+
+        /* Add Question Form Box */
+        .add-faq-box { background: #fff; padding: 15px; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-top: 20px; }
+        .add-faq-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: #222; }
+        .form-group { margin-bottom: 12px; }
+        .form-input { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12px; outline: none; background: #fcfdfe; }
+        .form-input:focus { border-color: #ff3b30; }
+        .submit-btn { background: #ff3b30; color: #fff; border: none; width: 100%; padding: 11px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; }
+
+        /* ===== CUSTOM ALERT MODAL ===== */
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; visibility: hidden; transition: 0.25s ease;
+        }
+        .custom-alert-overlay.active { opacity: 1; visibility: visible; }
+        .custom-alert-box {
+            background: #ffffff; width: 85%; max-width: 320px;
+            padding: 24px 20px; border-radius: 20px; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transform: scale(0.8); transition: transform 0.25s ease;
+        }
+        .custom-alert-overlay.active .custom-alert-box { transform: scale(1); }
+        .custom-alert-icon { font-size: 38px; color: #ff3b30; margin-bottom: 12px; }
+        .custom-alert-title { font-size: 16px; font-weight: 800; color: #111; margin-bottom: 8px; }
+        .custom-alert-msg { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.5; }
+        .custom-alert-btn {
+            background: #ff3b30; color: white; border: none; width: 100%;
+            padding: 11px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 10px 0 15px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #8e8e93; font-size: 10px; font-weight: 600; cursor: pointer; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="content-area">
+            <div class="header">
+                <div>FAQs & Help Center</div>
+            </div>
+
+            <!-- FAQ List -->
+            <div class="faq-section">
+                <div class="faq-title-main">प्रायः सोधिने प्रश्नहरू</div>
+                
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">डिपोजिट कसरी गर्ने? <i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="faq-answer">Home पेजमा रहेको Deposit बटनमा क्लिक गर्नुहोस्, त्यसपछि दिइएको क्युआर कोड वा वालेटमा रकम पठाएर ट्रान्जेक्सन आईडी सबमिट गर्नुहोस्।</div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">विथड्रवल हुन कति समय लाग्छ? <i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="faq-answer">साधारणतया विथड्रवल अनुरोध गरेको २४ घण्टाभित्र प्रमाणित (Approve) गरिन्छ।</div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">पासवर्ड बिर्सिएमा के गर्ने? <i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="faq-answer">तपाईंले हेल्प सेक्सन वा कस्टमर केयरमा सम्पर्क गरेर आफ्नो खाता प्रमाणित गरी पासवर्ड रिसेट गर्न सक्नुहुन्छ।</div>
+                </div>
+            </div>
+
+            <!-- Add New Question Box -->
+            <div class="add-faq-box">
+                <h3>तपाईँको कुनै प्रश्न छ? (Ask Question)</h3>
+                <div class="form-group">
+                    <input type="text" id="userQuestion" class="form-input" placeholder="आफ्नो प्रश्न यहां लेख्नुहोस्...">
+                </div>
+                <button class="submit-btn" onclick="submitQuestion()">प्रश्न पठाउनुहोस्</button>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="mining.html" class="nav-item"><i class="fa-solid fa-asterisk"></i><span>Mining</span></a>
+            <a href="team.html" class="nav-item"><i class="fa-solid fa-users-viewfinder"></i><span>Team</span></a>
+            <a href="mine.html" class="nav-item"><i class="fa-solid fa-robot"></i><span>Mine</span></a>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div class="custom-alert-overlay" id="customAlert">
+        <div class="custom-alert-box">
+            <div class="custom-alert-icon"><i class="fa-solid fa-circle-exclamation" id="alertIconSymbol"></i></div>
+            <div class="custom-alert-title" id="alertTitle">सूचना</div>
+            <div class="custom-alert-msg" id="alertMsg">Message here</div>
+            <button class="custom-alert-btn" onclick="closeCustomAlert()">OK</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxhx6PSbcK6lClXQnsN-mcmQXEwRZgKJ4",
+            authDomain: "earning-site-88f92.firebaseapp.com",
+            projectId: "earning-site-88f92",
+            storageBucket: "earning-site-88f92.firebasestorage.app",
+            messagingSenderId: "17257443529",
+            appId: "1:17257443529:web:496d88aafdc853a88a1d18"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        window.submitQuestion = async function() {
+            const questionText = document.getElementById('userQuestion').value.trim();
+            const user = auth.currentUser;
+
+            if (!questionText) {
+                showCustomAlert('त्रुटि!', 'कृपया प्रश्न लेख्नुहोस्!', true);
+                return;
+            }
+
+            try {
+                const userQuestionsRef = ref(db, 'user_faqs');
+                await push(userQuestionsRef, {
+                    uid: user ? user.uid : 'anonymous',
+                    email: user ? user.email : 'guest',
+                    question: questionText,
+                    date: new Date().toLocaleString()
+                });
+
+                showCustomAlert('सफलता!', 'तपाईँको प्रश्न सफलतापूर्वक पठाइयो!');
+                document.getElementById('userQuestion').value = '';
+            } catch (error) {
+                showCustomAlert('त्रुटि!', error.message, true);
+            }
+        };
+    </script>
+
+    <script>
+        function toggleFaq(el) {
+            el.classList.toggle('active');
+        }
+
+        function showCustomAlert(title, message, isError = false) {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMsg').innerText = message;
+            
+            const iconSymbol = document.getElementById('alertIconSymbol');
+            if (isError) {
+                iconSymbol.className = "fa-solid fa-circle-exclamation";
+                iconSymbol.style.color = "#dc2626";
+            } else {
+                iconSymbol.className = "fa-solid fa-circle-check";
+                iconSymbol.style.color = "#ff3b30";
+            }
+
+            document.getElementById('customAlert').classList.add('active');
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('customAlert').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

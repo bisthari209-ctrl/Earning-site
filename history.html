@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDTPayU - History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f7f8fc; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .phone-container { width: 100%; max-width: 420px; height: 100vh; background-color: #f9fafc; position: relative; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; }
+        .content-area { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 80px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0 15px 0; font-size: 18px; font-weight: 700; }
+        
+        /* Tabs */
+        .history-tabs { display: flex; background: #eee; border-radius: 10px; padding: 4px; margin-bottom: 15px; }
+        .h-tab { flex: 1; text-align: center; padding: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border-radius: 8px; color: #666; transition: 0.2s; }
+        .h-tab.active { background: #fff; color: #ff3b30; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+        /* List Items */
+        .history-list { display: flex; flex-direction: column; gap: 10px; }
+        .history-card { background: #fff; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .h-info div:first-child { font-size: 14px; font-weight: 700; color: #222; }
+        .h-info div:last-child { font-size: 11px; color: #888; margin-top: 3px; }
+        
+        .h-status { text-align: right; }
+        .h-amount { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 4px; }
+        .badge { font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: 700; display: inline-block; text-transform: uppercase; }
+        .badge.pending { background: #fff3e0; color: #ff9800; }
+        .badge.approved { background: #e8f8f0; color: #00c853; }
+        .badge.rejected { background: #feebe9; color: #ff3b30; }
+
+        .no-data { text-align: center; color: #888; font-size: 13px; margin-top: 40px; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 10px 0 15px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #8e8e93; font-size: 10px; font-weight: 600; cursor: pointer; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="content-area">
+            <div class="header">
+                <div>Transaction History</div>
+            </div>
+
+            <div class="history-tabs">
+                <div class="h-tab active" onclick="switchTab('deposit', this)">Deposit</div>
+                <div class="h-tab" onclick="switchTab('withdraw', this)">Withdraw</div>
+            </div>
+
+            <!-- Deposit Section -->
+            <div id="depositSection" class="history-list">
+                <div class="no-data">ডাटा लोड हुँदैछ...</div>
+            </div>
+
+            <!-- Withdraw Section -->
+            <div id="withdrawSection" class="history-list" style="display: none;">
+                <div class="no-data">ডাटा लोड हुँदैछ...</div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="mining.html" class="nav-item"><i class="fa-solid fa-asterisk"></i><span>Mining</span></a>
+            <a href="team.html" class="nav-item"><i class="fa-solid fa-users-viewfinder"></i><span>Team</span></a>
+            <a href="mine.html" class="nav-item"><i class="fa-solid fa-robot"></i><span>Mine</span></a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxhx6PSbcK6lClXQnsN-mcmQXEwRZgKJ4",
+            authDomain: "earning-site-88f92.firebaseapp.com",
+            projectId: "earning-site-88f92",
+            storageBucket: "earning-site-88f92.firebasestorage.app",
+            messagingSenderId: "17257443529",
+            appId: "1:17257443529:web:496d88aafdc853a88a1d18"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const uid = user.uid;
+
+                // Fetch Deposits
+                const depositRef = ref(db, 'deposits/' + uid);
+                const depositSnap = await get(depositRef);
+                const depositContainer = document.getElementById('depositSection');
+                
+                if (depositSnap.exists()) {
+                    depositContainer.innerHTML = "";
+                    depositSnap.forEach((childSnap) => {
+                        const data = childSnap.val();
+                        const status = data.status || "pending"; // pending, approved, rejected
+                        const badgeClass = status === "approved" ? "approved" : (status === "rejected" ? "rejected" : "pending");
+                        
+                        depositContainer.innerHTML += `
+                            <div class="history-card">
+                                <div class="h-info">
+                                    <div>Deposit</div>
+                                    <div>${data.date || 'भर्खरै'}</div>
+                                </div>
+                                <div class="h-status">
+                                    <div class="h-amount">रु ${parseFloat(data.amount || 0).toLocaleString()}</div>
+                                    <span class="badge ${badgeClass}">${status}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    depositContainer.innerHTML = `<div class="no-data">कुनै डिपोजिट रेकर्ड छैन।</div>`;
+                }
+
+                // Fetch Withdrawals
+                const withdrawRef = ref(db, 'withdrawals/' + uid);
+                const withdrawSnap = await get(withdrawRef);
+                const withdrawContainer = document.getElementById('withdrawSection');
+
+                if (withdrawSnap.exists()) {
+                    withdrawContainer.innerHTML = "";
+                    withdrawSnap.forEach((childSnap) => {
+                        const data = childSnap.val();
+                        const status = data.status || "pending";
+                        const badgeClass = status === "approved" ? "approved" : (status === "rejected" ? "rejected" : "pending");
+
+                        withdrawContainer.innerHTML += `
+                            <div class="history-card">
+                                <div class="h-info">
+                                    <div>Withdrawal</div>
+                                    <div>${data.date || 'भर्खरै'}</div>
+                                </div>
+                                <div class="h-status">
+                                    <div class="h-amount">रु ${parseFloat(data.amount || 0).toLocaleString()}</div>
+                                    <span class="badge ${badgeClass}">${status}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    withdrawContainer.innerHTML = `<div class="no-data">कुनै विथड्रवल रेकर्ड छैन।</div>`;
+                }
+
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+
+    <script>
+        function switchTab(type, el) {
+            document.querySelectorAll('.h-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+
+            if (type === 'deposit') {
+                document.getElementById('depositSection').style.display = 'flex';
+                document.getElementById('withdrawSection').style.display = 'none';
+            } else {
+                document.getElementById('depositSection').style.display = 'none';
+                document.getElementById('withdrawSection').style.display = 'flex';
+            }
+        }
+    </script>
+</body>
+</html>

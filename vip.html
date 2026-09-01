@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDTPayU - Investment Plans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f7f8fc;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background-color: #f9fafc;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: #fff;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .back-btn {
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: 90px;
+        }
+
+        /* Top Balance Card */
+        .top-balance-card {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 20px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .balance-title {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .balance-amount {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        .recharge-mini-btn {
+            background: #fff;
+            color: #2563eb;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Plan Card Style */
+        .plan-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #f1f3f5;
+            position: relative;
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .plan-title-box h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #222;
+            margin-bottom: 2px;
+        }
+
+        .plan-title-box p {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .plan-return-box {
+            text-align: right;
+        }
+
+        .return-label {
+            font-size: 9px;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            display: block;
+        }
+
+        .return-amount {
+            font-size: 18px;
+            font-weight: 900;
+            color: #16a34a;
+        }
+
+        .plan-details {
+            background: #f8f9fa;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-size: 11px;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        /* Invest Button */
+        .invest-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .invest-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Custom Modal Popup Styles */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s ease;
+        }
+
+        .custom-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-modal-box {
+            background: #fff;
+            width: 85%;
+            max-width: 320px;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: scale(0.8);
+            transition: 0.3s ease;
+        }
+
+        .custom-modal-overlay.active .custom-modal-box {
+            transform: scale(1);
+        }
+
+        .custom-modal-icon {
+            font-size: 40px;
+            color: #eab308;
+            margin-bottom: 12px;
+        }
+
+        .custom-modal-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #222;
+            margin-bottom: 8px;
+        }
+
+        .custom-modal-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .custom-modal-btn {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 15px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #8e8e93;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <!-- Top Header -->
+        <div class="profile-header">
+            <a href="mine.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+            <div class="header-title">Daily Investment Plans</div>
+        </div>
+
+        <div class="content-area">
+            
+            <!-- User Balance Card -->
+            <div class="top-balance-card">
+                <div class="balance-title">Available Balance</div>
+                <div class="balance-amount">रु <span id="userBalance">0.00</span></div>
+                <a href="recharge.html" class="recharge-mini-btn">
+                    <i class="fa-solid fa-wallet"></i> Recharge Account
+                </a>
+            </div>
+
+            <!-- Plan 1 -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-title-box">
+                        <h3>Plan Level 1</h3>
+                        <p>Investment: रु 200</p>
+                    </div>
+                    <div class="plan-return-box">
+                        <span class="return-label">Daily Return</span>
+                        <span class="return-amount">+रु 50 / రోజు</span>
+                    </div>
+                </div>
+                <div class="plan-details">
+                    <span><i class="fa-solid fa-clock"></i> Duration: 30 Days</span>
+                    <span><i class="fa-solid fa-shield-halved"></i> Total: रु 1,500</span>
+                </div>
+                <button class="invest-btn" onclick="handleInvest(1, 200, 50)">
+                    <i class="fa-solid fa-bolt"></i> Invest Now (रु 200)
+                </button>
+            </div>
+
+            <!-- Plan 2 -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-title-box">
+                        <h3>Plan Level 2</h3>
+                        <p>Investment: रु 300</p>
+                    </div>
+                    <div class="plan-return-box">
+                        <span class="return-label">Daily Return</span>
+                        <span class="return-amount">+रु 75 / రోజు</span>
+                    </div>
+                </div>
+                <div class="plan-details">
+                    <span><i class="fa-solid fa-clock"></i> Duration: 30 Days</span>
+                    <span><i class="fa-solid fa-shield-halved"></i> Total: रु 2,250</span>
+                </div>
+                <button class="invest-btn" onclick="handleInvest(2, 300, 75)">
+                    <i class="fa-solid fa-bolt"></i> Invest Now (रु 300)
+                </button>
+            </div>
+
+            <!-- Plan 3 -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-title-box">
+                        <h3>Plan Level 3</h3>
+                        <p>Investment: रु 400</p>
+                    </div>
+                    <div class="plan-return-box">
+                        <span class="return-label">Daily Return</span>
+                        <span class="return-amount">+रु 100 / రోజు</span>
+                    </div>
+                </div>
+                <div class="plan-details">
+                    <span><i class="fa-solid fa-clock"></i> Duration: 30 Days</span>
+                    <span><i class="fa-solid fa-shield-halved"></i> Total: रु 3,000</span>
+                </div>
+                <button class="invest-btn" onclick="handleInvest(3, 400, 100)">
+                    <i class="fa-solid fa-bolt"></i> Invest Now (रु 400)
+                </button>
+            </div>
+
+            <!-- Plan 4 -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-title-box">
+                        <h3>Plan Level 4</h3>
+                        <p>Investment: रु 500</p>
+                    </div>
+                    <div class="plan-return-box">
+                        <span class="return-label">Daily Return</span>
+                        <span class="return-amount">+रु 125 / రోజు</span>
+                    </div>
+                </div>
+                <div class="plan-details">
+                    <span><i class="fa-solid fa-clock"></i> Duration: 30 Days</span>
+                    <span><i class="fa-solid fa-shield-halved"></i> Total: रु 3,750</span>
+                </div>
+                <button class="invest-btn" onclick="handleInvest(4, 500, 125)">
+                    <i class="fa-solid fa-bolt"></i> Invest Now (रु 500)
+                </button>
+            </div>
+
+            <!-- Plan 5 -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-title-box">
+                        <h3>Plan Level 5</h3>
+                        <p>Investment: रु 600</p>
+                    </div>
+                    <div class="plan-return-box">
+                        <span class="return-label">Daily Return</span>
+                        <span class="return-amount">+रु 150 / రోజు</span>
+                    </div>
+                </div>
+                <div class="plan-details">
+                    <span><i class="fa-solid fa-clock"></i> Duration: 30 Days</span>
+                    <span><i class="fa-solid fa-shield-halved"></i> Total: रु 4,500</span>
+                </div>
+                <button class="invest-btn" onclick="handleInvest(5, 600, 150)">
+                    <i class="fa-solid fa-bolt"></i> Invest Now (रु 600)
+                </button>
+            </div>
+
+            <!-- Plan 6 -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-title-box">
+                        <h3>Plan Level 6</h3>
+                        <p>Investment: रु 700</p>
+                    </div>
+                    <div class="plan-return-box">
+                        <span class="return-label">Daily Return</span>
+                        <span class="return-amount">+रु 175 / రోజు</span>
+                    </div>
+                </div>
+                <div class="plan-details">
+                    <span><i class="fa-solid fa-clock"></i> Duration: 30 Days</span>
+                    <span><i class="fa-solid fa-shield-halved"></i> Total: रु 5,250</span>
+                </div>
+                <button class="invest-btn" onclick="handleInvest(6, 700, 175)">
+                    <i class="fa-solid fa-bolt"></i> Invest Now (रु 700)
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="mining.html" class="nav-item active"><i class="fa-solid fa-asterisk"></i><span>Mining</span></a>
+            <a href="team.html" class="nav-item"><i class="fa-solid fa-users-viewfinder"></i><span>Team</span></a>
+            <a href="mine.html" class="nav-item"><i class="fa-solid fa-robot"></i><span>Mine</span></a>
+        </div>
+    </div>
+
+    <!-- Custom Popup Modal -->
+    <div class="custom-modal-overlay" id="customModal">
+        <div class="custom-modal-box">
+            <div class="custom-modal-icon" id="modalIcon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="custom-modal-title" id="modalTitle">Notice</div>
+            <div class="custom-modal-text" id="modalText">Insufficient balance! Please recharge your account first.</div>
+            <button class="custom-modal-btn" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxhx6PSbcK6lClXQnsN-mcmQXEwRZgKJ4",
+            authDomain: "earning-site-88f92.firebaseapp.com",
+            projectId: "earning-site-88f92",
+            storageBucket: "earning-site-88f92.firebasestorage.app",
+            messagingSenderId: "17257443529",
+            appId: "1:17257443529:web:496d88aafdc853a88a1d18"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        let currentUser = null;
+        let currentBalance = 0.00;
+        let isRedirectToRecharge = false;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const userRef = ref(db, 'users/' + user.uid);
+                try {
+                    const snapshot = await get(userRef);
+                    if (snapshot.exists()) {
+                        let userData = snapshot.val();
+                        currentBalance = userData.balance || 0.00;
+                        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+                    }
+                } catch (error) {
+                    console.error("डाटा लोड गर्न समस्या आयो:", error);
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        window.handleInvest = async function(level, amount, dailyReturn) {
+            if (!currentUser) return;
+
+            if (currentBalance < amount) {
+                showModal("Insufficient Balance", "Please recharge your account first to buy this plan.", true);
+            } else {
+                currentBalance -= amount;
+                const today = new Date().toLocaleDateString();
+
+                const planData = {
+                    level: level,
+                    amount: amount,
+                    dailyReturn: dailyReturn,
+                    date: today
+                };
+
+                try {
+                    // डेटाबेसमा ब्यालेन्स र प्लान अपडेट गर्ने
+                    await update(ref(db, 'users/' + currentUser.uid), {
+                        balance: currentBalance,
+                        activePlan: planData
+                    });
+
+                    document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+                    showModal("Success", "You have successfully invested रु " + amount, false);
+                } catch (error) {
+                    showModal("Error", "लगानी गर्न असफल भयो। फेरि प्रयास गर्नुहोस्।", false);
+                }
+            }
+        };
+    </script>
+
+    <script>
+        let isRedirectToRecharge = false;
+
+        function showModal(title, text, redirectToRecharge) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalText').innerText = text;
+            isRedirectToRecharge = redirectToRecharge;
+            document.getElementById('customModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').classList.remove('active');
+            if (isRedirectToRecharge) {
+                window.location.href = "deposit.html";
+            }
+        }
+    </script>
+</body>
+</html>

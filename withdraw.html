@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDTPayU - रकम झिक्नुहोस् (Withdraw)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f7f8fc;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background-color: #f9fafc;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: #fff;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .back-btn {
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: 90px;
+        }
+
+        .top-balance-card {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.25);
+            margin-bottom: 20px;
+        }
+
+        .balance-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.85;
+            margin-bottom: 6px;
+        }
+
+        .balance-amount {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .card-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 15px;
+        }
+
+        .label-text {
+            font-size: 11px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .amount-input-box {
+            display: flex;
+            align-items: center;
+            background: #f7f8fc;
+            border: 1px solid #e1e4ed;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .amount-input-box span {
+            color: #d32f2f;
+            margin-right: 8px;
+        }
+
+        .amount-input-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 20px;
+            font-weight: 700;
+            width: 100%;
+            color: #333;
+        }
+
+        .max-btn {
+            background: #ffebee;
+            color: #d32f2f;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .input-info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .wallet-select-box {
+            width: 100%;
+            padding: 14px;
+            background: #f7f8fc;
+            border: 1px solid #e1e4ed;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .address-input-box {
+            display: flex;
+            align-items: center;
+            background: #f7f8fc;
+            border: 1px solid #e1e4ed;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .address-input-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .address-input-box i {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .calculation-box {
+            background: #fff8f8;
+            border: 1px solid #ffebee;
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .calc-row:last-child {
+            margin-bottom: 0;
+            padding-top: 8px;
+            border-top: 1px dashed #ffcdd2;
+            font-weight: 700;
+            color: #d32f2f;
+            font-size: 15px;
+        }
+
+        .action-btn {
+            width: 100%;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(211, 47, 47, 0.3);
+            transition: background 0.2s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .terms-note {
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+
+        /* Bottom Sheet Styles */
+        .bottom-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-sheet-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .bottom-sheet-content {
+            background: #fff;
+            width: 100%;
+            max-width: 420px;
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            padding: 20px 20px 35px 20px;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.15);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .bottom-sheet-overlay.active .bottom-sheet-content {
+            transform: translateY(0);
+        }
+
+        .sheet-indicator {
+            width: 40px;
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 0 auto 15px auto;
+        }
+
+        .sheet-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .sheet-option {
+            padding: 14px 15px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 1px solid #f1f3f5;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sheet-option:hover {
+            background: #f9fafc;
+            color: #d32f2f;
+        }
+
+        .sheet-option:last-child {
+            border-bottom: none;
+        }
+
+        /* Custom Popup Modal */
+        .custom-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .custom-popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-popup-box {
+            background: #fff;
+            width: 85%;
+            max-width: 320px;
+            padding: 25px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .custom-popup-overlay.active .custom-popup-box {
+            transform: scale(1);
+        }
+
+        .custom-popup-icon {
+            font-size: 40px;
+            color: #d32f2f;
+            margin-bottom: 12px;
+        }
+
+        .custom-popup-msg {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .custom-popup-btn {
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 15px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #8e8e93;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="profile-header">
+            <a href="mine.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+            <div class="header-title">Withdraw</div>
+        </div>
+
+        <div class="content-area">
+            
+            <!-- Top Balance Card in NPR -->
+            <div class="top-balance-card">
+                <div class="balance-title">उपलब्ध ब्यालेन्स (Available Balance)</div>
+                <div class="balance-amount">रु <span id="userBalance">0.00</span></div>
+            </div>
+
+            <div class="card-box">
+                <!-- Withdraw Amount -->
+                <div class="label-text">झिक्ने रकम (Withdraw Amount)</div>
+                <div class="amount-input-box">
+                    <span>रु</span>
+                    <input type="number" id="withdrawAmount" value="500" oninput="calculateTotal()">
+                    <button class="max-btn" onclick="setMaxAmount()">MAX</button>
+                </div>
+                <div class="input-info-row">
+                    <span>न्यूनतम: रु २००</span>
+                    <span>सेवा शुल्क: ५% (5%)</span>
+                </div>
+
+                <!-- Wallet Selection -->
+                <div class="label-text">भुक्तानी माध्यम (Withdrawal Method)</div>
+                <div class="wallet-select-box" onclick="openWalletSheet()">
+                    <span id="selectedWalletText">eSewa Wallet</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #666;"></i>
+                </div>
+
+                <!-- Account Holder Name Input -->
+                <div class="label-text">वालेट वा खातावालाको नाम (Account Holder Name)</div>
+                <div class="address-input-box">
+                    <input type="text" id="accountNameInput" placeholder="तपाईंको पूरा नाम (Full Name)">
+                    <i class="fa-solid fa-user" style="color: #666;"></i>
+                </div>
+
+                <!-- Wallet ID/Number Input -->
+                <div class="label-text" id="addressLabel">eSewa ID / Mobile Number</div>
+                <div class="address-input-box">
+                    <input type="text" id="walletAddressInput" placeholder="इसेवा मोबाइल नम्बर राख्नुहोस्">
+                    <i class="fa-solid fa-wallet" style="color: #666;"></i>
+                </div>
+
+                <!-- Calculation Summary Box with 5% Fee -->
+                <div class="calculation-box">
+                    <div class="calc-row">
+                        <span>झिक्ने रकम (Withdrawal Amount)</span>
+                        <span id="calcAmount">रु 500.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span>सेवा शुल्क (Service Fee - 5%)</span>
+                        <span id="calcFee">-रु 25.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span>तपाईंले प्राप्त गर्ने (You Receive)</span>
+                        <span id="calcReceive">रु 475.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="action-btn" onclick="confirmWithdrawal()">रकम झिक्न पुष्टि गर्नुहोस् (Confirm)</button>
+            <div class="terms-note">५% सेवा शुल्क काटेर बाँकी रकम पठाइनेछ。<br>एडमिनले स्वीकृत (Approve) गरेपछि ब्यालेन्स काटिनेछ।</div>
+
+        </div>
+
+        <div class="bottom-nav">
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="mining.html" class="nav-item"><i class="fa-solid fa-asterisk"></i><span>Mining</span></a>
+            <a href="team.html" class="nav-item"><i class="fa-solid fa-users-viewfinder"></i><span>Team</span></a>
+            <a href="mine.html" class="nav-item active"><i class="fa-solid fa-robot"></i><span>Mine</span></a>
+        </div>
+    </div>
+
+    <!-- Wallet Selection Bottom Sheet -->
+    <div class="bottom-sheet-overlay" id="walletSheet" onclick="closeSheets(event)">
+        <div class="bottom-sheet-content">
+            <div class="sheet-indicator"></div>
+            <div class="sheet-title">वालेट वा बैंक छान्नुहोस्</div>
+            <div class="sheet-option" onclick="selectWallet('eSewa Wallet', 'eSewa ID / Mobile Number', 'इसेवा मोबाइल नम्बर राख्नुहोस्')">eSewa Wallet <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #bbb;"></i></div>
+            <div class="sheet-option" onclick="selectWallet('Khalti Wallet', 'Khalti Mobile Number', 'खल्ती मोबाइल नम्बर राख्नुहोस्')">Khalti Wallet <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #bbb;"></i></div>
+            <div class="sheet-option" onclick="selectWallet('IME Pay', 'IME Pay Mobile Number', 'आइएमई पे नम्बर राख्नुहोस्')">IME Pay <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #bbb;"></i></div>
+            <div class="sheet-option" onclick="selectWallet('Bank Account', 'Bank Account Number', 'बैंक खाता नम्बर राख्नुहोस्')">Bank Account (NEPS) <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #bbb;"></i></div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Popup -->
+    <div class="custom-popup-overlay" id="customPopup">
+        <div class="custom-popup-box">
+            <div class="custom-popup-icon" id="popupIcon"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div class="custom-popup-msg" id="popupMessage">सन्देश यहाँ आउनेछ</div>
+            <button class="custom-popup-btn" onclick="closeCustomPopup()">ઠીक छ (OK)</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxhx6PSbcK6lClXQnsN-mcmQXEwRZgKJ4",
+            authDomain: "earning-site-88f92.firebaseapp.com",
+            projectId: "earning-site-88f92",
+            storageBucket: "earning-site-88f92.firebasestorage.app",
+            messagingSenderId: "17257443529",
+            appId: "1:17257443529:web:496d88aafdc853a88a1d18"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        let currentUser = null;
+        let currentBalance = 0.00;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const userRef = ref(db, 'users/' + user.uid);
+                try {
+                    const snapshot = await get(userRef);
+                    if (snapshot.exists()) {
+                        let userData = snapshot.val();
+                        currentBalance = userData.balance || 0.00;
+                        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+                    }
+                } catch (error) {
+                    console.error("ब्यालेन्स लोड गर्न समस्या आयो:", error);
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        window.setMaxAmount = function() {
+            document.getElementById('withdrawAmount').value = currentBalance;
+            calculateTotal();
+        }
+
+        window.confirmWithdrawal = async function() {
+            if (!currentUser) return;
+
+            const amtInput = document.getElementById('withdrawAmount').value;
+            const amt = amtInput ? parseFloat(amtInput) : 0;
+            const accountName = document.getElementById('accountNameInput').value;
+            const address = document.getElementById('walletAddressInput').value;
+            const walletType = document.getElementById('selectedWalletText').innerText;
+
+            if(!amt || amt < 200) {
+                showCustomAlert("कृपया कम्तिमा रु २०० वा सोभन्दा बढी रकम राख्नुहोस्!", false);
+                return;
+            }
+
+            if(amt > currentBalance) {
+                showCustomAlert("तपाईंको ब्यालेन्समा पर्याप्त रकम छैन!", false);
+                return;
+            }
+
+            if(!accountName.trim()) {
+                showCustomAlert("कृपया आफ्नो पूरा नाम (Account Holder Name) लेख्नुहोस्!", false);
+                return;
+            }
+
+            if(!address.trim()) {
+                showCustomAlert("कृपया आफ्नो इसेवा वा वालेट नम्बर सहि रूपमा भर्नुहोस्!", false);
+                return;
+            }
+
+            const fee = amt * 0.05;
+            const receive = amt - fee;
+            const today = new Date().toLocaleString();
+
+            try {
+                // यहाँ युजरको ब्यालेन्स घटाउने कोड हटाइएको छ ताकि एडमिनले अप्रुभ नगरेसम्म ब्यालेन्स नघटोस्
+                const withdrawRef = push(ref(db, 'withdrawals/' + currentUser.uid));
+                await set(withdrawRef, {
+                    amount: amt,
+                    fee: fee,
+                    receive: receive,
+                    walletType: walletType,
+                    accountName: accountName,
+                    walletAddress: address,
+                    status: "pending",
+                    date: today
+                });
+
+                showCustomAlert("विथड्र अनुरोध सफलतापूर्वक पेस भयो! एडमिनले स्वीकृत गरेपछि ब्यालेन्स काटिनेछ।", true);
+            } catch (error) {
+                showCustomAlert("अनुरोध असफल भयो। फेरि प्रयास गर्नुहोस्।", false);
+            }
+        };
+    </script>
+
+    <script>
+        function showCustomAlert(message, isSuccess = false) {
+            const popup = document.getElementById('customPopup');
+            const msgEl = document.getElementById('popupMessage');
+            const iconEl = document.getElementById('popupIcon');
+            
+            msgEl.innerText = message;
+            if(isSuccess) {
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #00c853;"></i>';
+            } else {
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color: #d32f2f;"></i>';
+            }
+            popup.classList.add('active');
+        }
+
+        function closeCustomPopup() {
+            document.getElementById('customPopup').classList.remove('active');
+        }
+
+        function calculateTotal() {
+            const amtInput = document.getElementById('withdrawAmount').value;
+            const amt = amtInput ? parseFloat(amtInput) : 0;
+            
+            const fee = amt * 0.05;
+            const receive = amt - fee;
+
+            document.getElementById('calcAmount').innerText = "रु " + amt.toFixed(2);
+            document.getElementById('calcFee').innerText = "-रु " + fee.toFixed(2);
+            document.getElementById('calcReceive').innerText = "रु " + receive.toFixed(2);
+        }
+
+        function openWalletSheet() {
+            document.getElementById('walletSheet').classList.add('active');
+        }
+
+        function closeSheets(event) {
+            if (event.target.classList.contains('bottom-sheet-overlay')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        function selectWallet(walletName, labelText, placeholderText) {
+            document.getElementById('selectedWalletText').innerText = walletName;
+            document.getElementById('addressLabel').innerText = labelText;
+            document.getElementById('walletAddressInput').placeholder = placeholderText;
+            document.getElementById('walletSheet').classList.remove('active');
+        }
+
+        calculateTotal();
+    </script>
+</body>
+</html>
