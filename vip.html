@@ -490,6 +490,33 @@
                     if (snapshot.exists()) {
                         let userData = snapshot.val();
                         currentBalance = userData.balance || 0.00;
+                        
+                        // --- दैनिक रिटर्न (Daily Return) गणना गर्ने लजिक ---
+                        if (userData.activePlan) {
+                            let plan = userData.activePlan;
+                            let lastClaimDate = plan.lastClaimDate || plan.date;
+                            
+                            let todayStr = new Date().toDateString();
+                            let lastDateStr = new Date(lastClaimDate).toDateString();
+
+                            // यदि आजको मिति र अन्तिम पटक दाबी गरेको मिति फरक छ भने दैनिक आम्दानी जोड्ने
+                            if (todayStr !== lastDateStr) {
+                                let daysInvested = Math.floor((new Date() - new Date(plan.date)) / (1000 * 60 * 60 * 24));
+                                
+                                // अधिकतम ३० दिनसम्म मात्र रिटर्न दिने
+                                if (daysInvested <= 30 && daysInvested > 0) {
+                                    currentBalance += plan.dailyReturn;
+                                    plan.lastClaimDate = new Date().toISOString(); // अन्तिम दाबी मिति अपडेट
+
+                                    // फायरबेसमा नयाँ ब्यालेन्स र प्लानको स्टेट अपडेट गर्ने
+                                    await update(userRef, {
+                                        balance: currentBalance,
+                                        activePlan: plan
+                                    });
+                                }
+                            }
+                        }
+
                         document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
                     }
                 } catch (error) {
@@ -507,17 +534,18 @@
                 showModal("Insufficient Balance", "Please recharge your account first to buy this plan.", true);
             } else {
                 currentBalance -= amount;
-                const today = new Date().toLocaleDateString();
+                const today = new Date().toISOString();
 
                 const planData = {
                     level: level,
                     amount: amount,
                     dailyReturn: dailyReturn,
-                    date: today
+                    date: today,
+                    lastClaimDate: today
                 };
 
                 try {
-                    // डेटाबेसमा ब्यालेन्स र प्लान अपडेट गर्ने
+                    // डेटाबेसमा ब्यालेन्स र नयाँ प्लान अपडेट गर्ने
                     await update(ref(db, 'users/' + currentUser.uid), {
                         balance: currentBalance,
                         activePlan: planData
