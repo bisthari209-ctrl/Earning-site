@@ -305,7 +305,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, get, update, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxhx6PSbcK6lClXQnsN-mcmQXEwRZgKJ4",
@@ -322,29 +322,73 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // प्रयोगकर्ता लगइन छ भने डाटाबेसबाट प्लान लोड गर्ने
-                const userPlanRef = ref(db, 'users/' + user.uid + '/activePlan');
+                const userRef = ref(db, 'users/' + user.uid);
                 try {
-                    const snapshot = await get(userPlanRef);
+                    const snapshot = await get(userRef);
                     if (snapshot.exists()) {
-                        let plan = snapshot.val();
+                        let userData = snapshot.val();
+                        let plan = userData.activePlan;
                         
-                        document.getElementById('vipLevelDisplay').innerText = plan.level || "0";
-                        document.getElementById('dailyIncomeDisplay').innerText = "रु " + (plan.dailyReturn ? plan.dailyReturn.toFixed(2) : "0.00");
-                        document.getElementById('hashrateDisplay').innerText = (plan.amount ? (plan.amount * 0.5).toFixed(2) : "0.00");
-                        
-                        document.getElementById('recordsContainer').innerHTML = `
-                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #333; font-weight: 600;">
-                                <span>${plan.date || 'Today'}</span>
-                                <span style="color: #16a34a; font-weight: 800;">+रु ${plan.dailyReturn}</span>
-                            </div>
-                        `;
+                        if (plan) {
+                            document.getElementById('vipLevelDisplay').innerText = plan.level || "0";
+                            document.getElementById('dailyIncomeDisplay').innerText = "रु " + (plan.dailyReturn ? plan.dailyReturn.toFixed(2) : "0.00");
+                            document.getElementById('hashrateDisplay').innerText = (plan.amount ? (plan.amount * 0.5).toFixed(2) : "0.00");
+
+                            // २४ घण्टਾ भएको छ कि छैन जाँच गर्ने
+                            const now = new Date().getTime();
+                            const lastCollected = plan.lastCollected || 0;
+                            const twentyFourHours = 24 * 60 * 60 * 1000;
+
+                            if (now - lastCollected >= twentyFourHours) {
+                                let currentBalance = userData.balance || 0;
+                                let dailyReturn = plan.dailyReturn || 0;
+                                let newBalance = currentBalance + dailyReturn;
+                                let currentDate = new Date().toISOString().split('T')[0];
+
+                                // ब्यालेन्स र अन्तिम पटक कलेक्सन गरेको समय अपडेट गर्ने
+                                await update(userRef, {
+                                    balance: newBalance,
+                                    'activePlan/lastCollected': now
+                                });
+
+                                // रेकर्ड थप्ने
+                                const recordsRef = ref(db, 'users/' + user.uid + '/miningRecords');
+                                const newRecordRef = push(recordsRef);
+                                await update(newRecordRef, {
+                                    date: currentDate,
+                                    amount: dailyReturn
+                                });
+
+                                alert(`बधाई छ! तपाईंको दैनिक आम्दानी रु ${dailyReturn} ब्यालेन्समा थपियो।`);
+                                window.location.reload(); // पेज रिफ्रेस गरेर नयाँ रेकर्ड देखाउने
+                            }
+
+                            // रेकर्डहरू डिस्प्ले गर्ने
+                            if (userData.miningRecords) {
+                                let recordsHtml = '';
+                                Object.values(userData.miningRecords).reverse().forEach(rec => {
+                                    recordsHtml += `
+                                        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #333; font-weight: 600; margin-bottom: 8px; border-bottom: 1px solid #f0f2f5; padding-bottom: 6px;">
+                                            <span>${rec.date}</span>
+                                            <span style="color: #16a34a; font-weight: 800;">+रु ${rec.amount}</span>
+                                        </div>
+                                    `;
+                                });
+                                document.getElementById('recordsContainer').innerHTML = recordsHtml;
+                            } else {
+                                document.getElementById('recordsContainer').innerHTML = `
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #333; font-weight: 600;">
+                                        <span>${plan.date || 'Today'}</span>
+                                        <span style="color: #16a34a; font-weight: 800;">+रु ${plan.dailyReturn}</span>
+                                    </div>
+                                `;
+                            }
+                        }
                     }
                 } catch (error) {
                     console.error("डाटा लोड गर्न समस्या आयो:", error);
                 }
             } else {
-                // लगइन छैन भने लगइन पेजमा पठाउने
                 window.location.href = "login.html";
             }
         });
