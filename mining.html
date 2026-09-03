@@ -145,6 +145,27 @@
             margin-top: 2px;
         }
 
+        /* Timer Box Style */
+        .timer-box {
+            background: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #f1f3f5;
+        }
+        .timer-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .timer-display {
+            font-size: 18px;
+            font-weight: 900;
+            color: #2563eb;
+        }
+
         /* Add Power Button */
         .add-power-btn {
             background: linear-gradient(135deg, #e53935, #c62828);
@@ -162,7 +183,7 @@
             justify-content: center;
             gap: 8px;
             text-decoration: none;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .add-power-btn:active {
@@ -276,6 +297,12 @@
                 <div class="hashrate-label">Current Hashrate</div>
             </div>
 
+            <!-- Timer Box -->
+            <div class="timer-box">
+                <div class="timer-label">NEXT MINING SETTLEMENT IN</div>
+                <div class="timer-display" id="countdownTimer">24:00:00</div>
+            </div>
+
             <a href="vip.html" class="add-power-btn">
                 <i class="fa-solid fa-circle-plus"></i> Add More Power
             </a>
@@ -334,34 +361,33 @@
                             document.getElementById('dailyIncomeDisplay').innerText = "रु " + (plan.dailyReturn ? plan.dailyReturn.toFixed(2) : "0.00");
                             document.getElementById('hashrateDisplay').innerText = (plan.amount ? (plan.amount * 0.5).toFixed(2) : "0.00");
 
-                            // २४ घण्टਾ भएको छ कि छैन जाँच गर्ने
-                            const now = new Date().getTime();
-                            const lastCollected = plan.lastCollected || 0;
+                            // २४ घण्टाको काउन्टडाउन टाइमर चलाउने
+                            const lastCollected = plan.lastCollected || new Date().getTime();
                             const twentyFourHours = 24 * 60 * 60 * 1000;
+                            const targetTime = lastCollected + twentyFourHours;
 
-                            if (now - lastCollected >= twentyFourHours) {
-                                let currentBalance = userData.balance || 0;
-                                let dailyReturn = plan.dailyReturn || 0;
-                                let newBalance = currentBalance + dailyReturn;
-                                let currentDate = new Date().toISOString().split('T')[0];
+                            function updateTimer() {
+                                const now = new Date().getTime();
+                                const timeLeft = targetTime - now;
 
-                                // ब्यालेन्स र अन्तिम पटक कलेक्सन गरेको समय अपडेट गर्ने
-                                await update(userRef, {
-                                    balance: newBalance,
-                                    'activePlan/lastCollected': now
-                                });
+                                if (timeLeft <= 0) {
+                                    document.getElementById('countdownTimer').innerText = "00:00:00";
+                                    // समय पुगेपछि स्वतः ब्यालेन्स जोड्ने र रेकर्ड राख्ने (पपअप बिना)
+                                    autoCollectIncome(userData, userRef, plan);
+                                } else {
+                                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-                                // रेकर्ड थप्ने
-                                const recordsRef = ref(db, 'users/' + user.uid + '/miningRecords');
-                                const newRecordRef = push(recordsRef);
-                                await update(newRecordRef, {
-                                    date: currentDate,
-                                    amount: dailyReturn
-                                });
-
-                                alert(`बधाई छ! तपाईंको दैनिक आम्दानी रु ${dailyReturn} ब्यालेन्समा थपियो।`);
-                                window.location.reload(); // पेज रिफ्रेस गरेर नयाँ रेकर्ड देखाउने
+                                    document.getElementById('countdownTimer').innerText = 
+                                        String(hours).padStart(2, '0') + ":" + 
+                                        String(minutes).padStart(2, '0') + ":" + 
+                                        String(seconds).padStart(2, '0');
+                                }
                             }
+
+                            setInterval(updateTimer, 1000);
+                            updateTimer();
 
                             // रेकर्डहरू डिस्प्ले गर्ने
                             if (userData.miningRecords) {
@@ -392,6 +418,31 @@
                 window.location.href = "login.html";
             }
         });
+
+        // अटो कलेक्सन गर्ने फंक्शन (पपअप नआउने गरी)
+        async function autoCollectIncome(userData, userRef, plan) {
+            const now = new Date().getTime();
+            let currentBalance = userData.balance || 0;
+            let dailyReturn = plan.dailyReturn || 0;
+            let newBalance = currentBalance + dailyReturn;
+            let currentDate = new Date().toISOString().split('T')[0];
+
+            // ब्यालेन्स र समय अपडेट गर्ने
+            await update(userRef, {
+                balance: newBalance,
+                'activePlan/lastCollected': now
+            });
+
+            // रेकर्ड थप्ने
+            const recordsRef = ref(db, 'users/' + userData.uid + '/miningRecords');
+            const newRecordRef = push(recordsRef);
+            await update(newRecordRef, {
+                date: currentDate,
+                amount: dailyReturn
+            });
+
+            window.location.reload();
+        }
     </script>
 </body>
 </html>
